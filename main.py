@@ -1,4 +1,7 @@
 from characters import characters
+from locations import locations
+from relationships import relationships
+from world import world
 
 
 def show_header(title):
@@ -6,6 +9,76 @@ def show_header(title):
     print(title)
     print("=" * 40)
     print()
+
+
+def display_item(item):
+    for title, value in item.items():
+        if isinstance(value, list):
+            if len(value) == 0:
+                continue
+
+            print(title + ":")
+
+            for entry in value:
+                print("  •", entry)
+
+        else:
+            print(title + ":")
+            print("  ", value)
+
+        print()
+
+
+def character_menu(character):
+    while True:
+        print("=" * 30)
+        print(character["Name"])
+        print("=" * 30)
+        print("1. General Information")
+        print("2. Relationships")
+        print("3. Timeline")
+        print("4. Notes")
+        print("5. Quotes")
+        print("6. Back")
+
+        choice = input("Choice: ")
+        print()
+
+        if choice == "1":
+            display_item(character)
+            input("Press Enter...")
+
+        elif choice == "2":
+            character_name = character["Name"]
+
+            if character_name in relationships:
+                print("=" * 30)
+                print(character_name + " Relationships")
+                print("=" * 30)
+                display_item(relationships[character_name])
+            else:
+                print("No relationships found for", character_name + ".")
+
+            input("Press Enter...")
+
+        elif choice == "3":
+            print("Timeline coming soon!")
+            input("Press Enter...")
+
+        elif choice == "4":
+            print("Notes coming soon!")
+            input("Press Enter...")
+
+        elif choice == "5":
+            print("Quotes coming soon!")
+            input("Press Enter...")
+
+        elif choice == "6":
+            break
+
+        else:
+            print("Invalid choice.")
+            input("Press Enter...")
 
 
 def run_search(database, label):
@@ -19,7 +92,7 @@ def run_search(database, label):
             print(key + ".", item["Name"])
 
     print()
-    search = input("Enter " + label.lower() + " search: ")
+    search = input("Enter number or " + label.lower() + " search: ")
     print()
 
     matches = []
@@ -46,15 +119,25 @@ def run_search(database, label):
                     break
 
     else:
-        for info in database.values():
-            for title, value in info.items():
-                if search.lower() in str(value).lower():
-                    matches.append({
-                        "item": info,
-                        "matched_title": title,
-                        "matched_value": value
-                    })
-                    break
+        if search.isdigit() and search in database:
+            info = database[search]
+
+            matches.append({
+                "item": info,
+                "matched_title": "Selection",
+                "matched_value": search
+            })
+
+        else:
+            for info in database.values():
+                for title, value in info.items():
+                    if search.lower() in str(value).lower():
+                        matches.append({
+                            "item": info,
+                            "matched_title": title,
+                            "matched_value": value
+                        })
+                        break
 
     if not matches:
         print("No", label.lower(), "found.")
@@ -72,13 +155,13 @@ def run_search(database, label):
             else:
                 print(label + ":", item["Name"])
 
-            print("Match found in", match["matched_title"] + ":", match["matched_value"])
+            print("Match found in", match["matched_title"])
             print()
 
-            for title, value in item.items():
-                print(title + ":", value)
-
-            print()
+            if label == "Character":
+                character_menu(item)
+            else:
+                display_item(item)
 
     input("Press Enter to return to the main menu...")
 
@@ -96,7 +179,7 @@ while True:
     print("-" * 20)
     print("1. Characters")
     print("2. Locations")
-    print("3. Powers")
+    print("3. World")
     print("4. Creatures")
     print("5. Timeline")
     print("6. Relationships")
@@ -112,8 +195,7 @@ while True:
         run_search(locations, "Location")
 
     elif menu_choice == "3":
-        print("Powers module coming soon!")
-        input("Press Enter to return to the main menu...")
+        run_search(world, "World")
 
     elif menu_choice == "4":
         print("Creatures module coming soon!")
