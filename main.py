@@ -2,6 +2,7 @@ from characters import characters
 from locations import locations
 from relationships import relationships
 from world import world
+from project import project
 
 
 def show_header(title):
@@ -80,6 +81,20 @@ def character_menu(character):
             print("Invalid choice.")
             input("Press Enter...")
 
+def project_overview():
+
+    print("=" * 30)
+    print("Project Overview")
+    print("=" * 30)
+
+    print("Characters :", len(characters))
+    print("Locations  :", len(locations))
+    print("Relationships :", len(relationships))
+    print("World Entries :", len(world))
+
+    print()
+
+    input("Press Enter...")
 
 def run_search(database, label):
     print("Choose a", label.lower())
@@ -166,17 +181,21 @@ def run_search(database, label):
     input("Press Enter to return to the main menu...")
 
 
-show_header("        StoryVault v1.0.0")
+show_header("        StoryVault v1.1.0")
 
 player_name = input("What's your name? ")
 print()
-print("Welcome,", player_name + "!")
+print("=" * 40)
+print("StoryVault helps writers organize")
+print("characters, locations and worlds.")
+print("=" * 40)
 print()
 
 while True:
     print()
     print("Main Menu")
     print("-" * 20)
+    print("0. Project Overview")
     print("1. Characters")
     print("2. Locations")
     print("3. World")
@@ -187,8 +206,11 @@ while True:
 
     menu_choice = input("Enter your choice: ")
     print()
+   
+    if menu_choice == "0":
+        project_overview()
 
-    if menu_choice == "1":
+    elif menu_choice == "1":
         run_search(characters, "Character")
 
     elif menu_choice == "2":
