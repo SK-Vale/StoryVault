@@ -2,7 +2,6 @@ from characters import characters
 from locations import locations
 from relationships import relationships
 from world import world
-from project import project
 from notes import notes
 from projects import projects
 
@@ -16,7 +15,13 @@ def show_header(title):
 
 def display_item(item):
     for title, value in item.items():
-        if isinstance(value, list):
+        if isinstance(value, dict):
+            print(title + ":")
+
+            for sub_title, sub_value in value.items():
+                print("  " + sub_title + ":", sub_value)
+
+        elif isinstance(value, list):
             if len(value) == 0:
                 continue
 
@@ -30,6 +35,120 @@ def display_item(item):
             print("  ", value)
 
         print()
+
+
+def project_overview():
+    print("=" * 30)
+    print("Project Overview")
+    print("=" * 30)
+
+    print("Characters     :", len(characters))
+    print("Locations      :", len(locations))
+    print("Relationships  :", len(relationships))
+    print("World Entries  :", len(world))
+    print("Notes          :", len(notes))
+    print("Projects       :", len(projects))
+    print()
+
+    input("Press Enter...")
+
+
+def about():
+    print("=" * 30)
+    print("About StoryVault")
+    print("=" * 30)
+    print()
+
+    print("StoryVault")
+    print("Version : 1.1.0")
+    print("Language: Python")
+    print()
+
+    print("StoryVault is a worldbuilding and")
+    print("project organization tool for")
+    print("writers.")
+    print()
+
+    print("Created by:")
+    print("Manson")
+    print()
+
+    print("Current Modules")
+    print("----------------")
+    print("Characters")
+    print("Locations")
+    print("World")
+    print("Relationships")
+    print("Notes")
+    print("Projects")
+    print()
+
+    input("Press Enter...")
+
+
+def favorite_characters():
+    print("=" * 30)
+    print("Favorite Characters")
+    print("=" * 30)
+    print()
+
+    found = False
+
+    for character in characters.values():
+        if character.get("Favorite") == "Yes":
+            print("•", character["Name"])
+            found = True
+
+    if not found:
+        print("No favorite characters.")
+
+    print()
+    input("Press Enter...")
+
+
+def search_all():
+    print("=" * 30)
+    print("Search All")
+    print("=" * 30)
+
+    search = input("Enter search: ")
+    print()
+
+    databases = {
+        "Character": characters,
+        "Location": locations,
+        "World": world,
+        "Relationship": relationships,
+        "Note": notes,
+        "Project": projects
+    }
+
+    found = False
+
+    for label, database in databases.items():
+        for key, item in database.items():
+
+            if label == "Relationship":
+                if search.lower() in key.lower() or search.lower() in str(item).lower():
+                    print("=" * 30)
+                    print(label + ":", key)
+                    print("=" * 30)
+                    display_item(item)
+                    found = True
+
+            else:
+                if search.lower() in str(item).lower():
+                    print("=" * 30)
+                    print(label + ":", item["Name"])
+                    print("=" * 30)
+                    display_item(item)
+                    found = True
+
+    if not found:
+        print("No results found.")
+
+    print()
+    input("Press Enter...")
 
 
 def character_menu(character):
@@ -83,121 +202,23 @@ def character_menu(character):
             print("Invalid choice.")
             input("Press Enter...")
 
-def project_overview():
 
-    print("=" * 30)
-    print("Project Overview")
+def open_item(item, label, match):
     print("=" * 30)
 
-    print("Characters :", len(characters))
-    print("Locations  :", len(locations))
-    print("Relationships :", len(relationships))
-    print("World Entries :", len(world))
+    if label == "Relationship":
+        print("Relationship:", match["name"])
+    else:
+        print(label + ":", item["Name"])
 
+    print("Match found in", match["matched_title"])
     print()
 
-    input("Press Enter...")
-    
-def about():
+    if label == "Character":
+        character_menu(item)
+    else:
+        display_item(item)
 
-    print("=" * 30)
-    print("About StoryVault")
-    print("=" * 30)
-    print()
-
-    print("StoryVault")
-    print("Version : 1.1.0")
-    print()
-
-    print("StoryVault is a worldbuilding and")
-    print("project organization tool for")
-    print("writers.")
-
-    print()
-
-    print("Created by:")
-    print("Manson")
-
-    print()
-
-    print("Current Modules")
-    print("----------------")
-    print("Characters")
-    print("Locations")
-    print("World")
-    print("Relationships")
-    print("Notes")
-    print("Projects")
-
-    print()
-
-    input("Press Enter...")
-
-def favorite_characters():
-
-    print("=" * 30)
-    print("Favorite Characters")
-    print("=" * 30)
-    print()
-
-    found = False
-
-    for character in characters.values():
-
-        if character.get("Favorite") == "Yes":
-            print("•", character["Name"])
-            found = True
-
-    if not found:
-        print("No favorite characters.")
-
-    print()
-
-    input("Press Enter...")
-
-def search_all():
-    print("=" * 30)
-    print("Search All")
-    print("=" * 30)
-
-    search = input("Enter search: ")
-    print()
-
-    databases = {
-        "Character": characters,
-        "Location": locations,
-        "World": world,
-        "Relationship": relationships,
-        "Note": notes,
-        "Project": projects
-    }
-
-    found = False
-
-    for label, database in databases.items():
-        for key, item in database.items():
-
-            if label == "Relationship":
-                if search.lower() in key.lower() or search.lower() in str(item).lower():
-                    print("=" * 30)
-                    print(label + ":", key)
-                    print("=" * 30)
-                    display_item(item)
-                    found = True
-
-            else:
-                if search.lower() in str(item).lower():
-                    print("=" * 30)
-                    print(label + ":", item["Name"])
-                    print("=" * 30)
-                    display_item(item)
-                    found = True
-
-    if not found:
-        print("No results found.")
-
-    print()
-    input("Press Enter...")
 
 def run_search(database, label):
     print("Choose a", label.lower())
@@ -265,21 +286,7 @@ def run_search(database, label):
 
         for match in matches:
             item = match["item"]
-
-            print("=" * 30)
-
-            if label == "Relationship":
-                print("Relationship:", match["name"])
-            else:
-                print(label + ":", item["Name"])
-
-            print("Match found in", match["matched_title"])
-            print()
-
-            if label == "Character":
-                character_menu(item)
-            else:
-                display_item(item)
+            open_item(item, label, match)
 
     input("Press Enter to return to the main menu...")
 
@@ -288,6 +295,9 @@ show_header("        StoryVault v1.1.0")
 
 player_name = input("What's your name? ")
 print()
+print("Welcome,", player_name + "!")
+print()
+
 print("=" * 40)
 print("StoryVault helps writers organize")
 print("characters, locations and worlds.")
@@ -306,14 +316,15 @@ while True:
     print("5. Timeline")
     print("6. Relationships")
     print("7. Notes")
-    print("8. About")
+    print("8. Projects")
+    print("9. About")
     print("A. Search All")
-    print("9. Exit")
     print("F. Favorite Characters")
+    print("10. Exit")
 
     menu_choice = input("Enter your choice: ")
     print()
-   
+
     if menu_choice == "0":
         project_overview()
 
@@ -341,20 +352,20 @@ while True:
         run_search(notes, "Note")
 
     elif menu_choice == "8":
-        run_search(projects, "About")
-
+        run_search(projects, "Project")
 
     elif menu_choice == "9":
-        print("Goodbye!")
-        break
-        
-    elif menu_choice.lower() == "f":
-        favorite_characters() 
+        about()
 
     elif menu_choice.lower() == "a":
         search_all()
 
-    
+    elif menu_choice.lower() == "f":
+        favorite_characters()
+
+    elif menu_choice == "10":
+        print("Goodbye!")
+        break
 
     else:
         print("Invalid choice.")
