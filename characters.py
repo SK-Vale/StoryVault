@@ -5,7 +5,8 @@ characters = {
         "Species": "Human",
         "Status": "Alive",
         "Role": "Archivist",
-        "Skill": "Research"
+        "Skill": "Research",
+        "Favorite": "Yes"
     },
     "2": {
         "Name": "Kael Thorn",
@@ -13,6 +14,7 @@ characters = {
         "Species": "Mage",
         "Status": "Alive",
         "Role": "Guardian",
-        "Skill": "Fire Magic"
+        "Skill": "Fire Magic",
+        "Favorite": "Yes"
     }
 }
