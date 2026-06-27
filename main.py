@@ -4,6 +4,10 @@ from relationships import relationships
 from world import world
 from notes import notes
 from projects import projects
+from goals import goals
+import random
+from tips import tips
+from sessions import sessions
 
 
 def show_header(title):
@@ -38,16 +42,37 @@ def display_item(item):
 
 
 def project_overview():
+    total_entries = (
+        len(characters)
+        + len(locations)
+        + len(relationships)
+        + len(world)
+        + len(notes)
+        + len(projects)
+        + len(goals)
+    )
+
     print("=" * 30)
     print("Project Overview")
     print("=" * 30)
+    print()
 
+    print("Database Statistics")
+    print("-" * 20)
     print("Characters     :", len(characters))
     print("Locations      :", len(locations))
     print("Relationships  :", len(relationships))
     print("World Entries  :", len(world))
     print("Notes          :", len(notes))
     print("Projects       :", len(projects))
+    print("Goals          :", len(goals))
+    print()
+
+    print("StoryVault Status")
+    print("-" * 20)
+    print("Total Entries  :", total_entries)
+    print("Version        : 1.2.0")
+    print("Status         : Prototype")
     print()
 
     input("Press Enter...")
@@ -60,7 +85,7 @@ def about():
     print()
 
     print("StoryVault")
-    print("Version : 1.1.0")
+    print("Version : 1.2.0")
     print("Language: Python")
     print()
 
@@ -81,10 +106,166 @@ def about():
     print("Relationships")
     print("Notes")
     print("Projects")
+    print("Goals")
+
+    input("Press Enter...")
+
+def pinned_projects():
+
+    print("=" * 30)
+    print("Pinned Projects")
+    print("=" * 30)
+    print()
+
+    found = False
+
+    for project in projects.values():
+
+        if project.get("Pinned") == "Yes":
+            print("⭐", project["Name"])
+            found = True
+
+    if not found:
+        print("No pinned projects.")
+
+    print()
+    input("Press Enter...")
+
+def writing_session():
+
+    print("=" * 30)
+    print("Writing Session")
+    print("=" * 30)
+    print()
+
+    project = input("Project: ")
+    goal = input("Goal (words): ")
+
+    print()
+    input("Press Enter when you've finished writing...")
+
+    print()
+
+    words = input("Words written: ")
+
+    session = {
+        "Project": project,
+        "Goal": goal,
+        "Words": words
+    }
+
+    sessions.append(session)
+
+    print()
+    print("Session Saved!")
+    print()
+
+    print("Project :", project)
+    print("Goal    :", goal)
+    print("Written :", words)
     print()
 
     input("Press Enter...")
 
+def writing_statistics():
+
+    print("=" * 30)
+    print("Writing Statistics")
+    print("=" * 30)
+    print()
+
+    if len(sessions) == 0:
+        print("No writing sessions yet.")
+
+    else:
+        total_words = 0
+        best_session = 0
+        project_totals = {}
+        goals_hit = 0
+
+        for session in sessions:
+            project_name = session["Project"]
+            words = int(session["Words"])
+            goal = int(session["Goal"])
+
+            total_words = total_words + words
+
+            if words > best_session:
+                best_session = words
+
+            if project_name not in project_totals:
+                project_totals[project_name] = 0
+
+            project_totals[project_name] = project_totals[project_name] + words
+
+            if words >= goal:
+                goals_hit = goals_hit + 1
+
+        average_words = total_words / len(sessions)
+
+        print("Sessions        :", len(sessions))
+        print("Total Words     :", total_words)
+        print("Average Session :", round(average_words))
+        print("Best Session    :", best_session)
+
+        print()
+        print("Words By Project")
+        print("-" * 20)
+
+        for project_name, words in project_totals.items():
+            print(project_name + ":", words)
+
+        print()
+        print("Goals Summary")
+        print("-" * 20)
+        print("Goals Hit    :", goals_hit)
+        print("Goals Missed :", len(sessions) - goals_hit)
+
+    print()
+    input("Press Enter...")
+
+def session_history():
+
+    print("=" * 30)
+    print("Writing History")
+    print("=" * 30)
+    print()
+
+    if len(sessions) == 0:
+        print("No writing sessions yet.")
+
+    else:
+        total_words = 0
+
+        for number, session in enumerate(sessions, start=1):
+            total_words = total_words + int(session["Words"])
+            
+            
+
+            print("Session", number)
+            print("-" * 15)
+
+            display_item(session)
+            goal = int(session["Goal"])
+            words = int(session["Words"])
+
+            difference = words - goal
+
+            if difference >= 0:
+                print("Result:")
+                print("   Goal Achieved! (+" + str(difference) + " words)")
+            else:
+                print("Result:")
+                print("   Goal Missed (" + str(difference) + " words)")
+
+            print()
+
+    print("=" * 30)
+    print("Total Words Written:", total_words)
+    print("=" * 30)
+    print()
+
+    input("Press Enter...")
 
 def favorite_characters():
     print("=" * 30)
@@ -120,7 +301,8 @@ def search_all():
         "World": world,
         "Relationship": relationships,
         "Note": notes,
-        "Project": projects
+        "Project": projects,
+        "Goal": goals
     }
 
     found = False
@@ -291,7 +473,7 @@ def run_search(database, label):
     input("Press Enter to return to the main menu...")
 
 
-show_header("        StoryVault v1.1.0")
+show_header("        StoryVault v1.2.0")
 
 player_name = input("What's your name? ")
 print()
@@ -299,8 +481,9 @@ print("Welcome,", player_name + "!")
 print()
 
 print("=" * 40)
-print("StoryVault helps writers organize")
-print("characters, locations and worlds.")
+print("Today's Writing Tip")
+print("-" * 40)
+print(random.choice(tips))
 print("=" * 40)
 print()
 
@@ -320,6 +503,11 @@ while True:
     print("9. About")
     print("A. Search All")
     print("F. Favorite Characters")
+    print("P. Pinned Projects")
+    print("G. Goals")
+    print("W. Writing Session")
+    print("H. Session History")
+    print("S. Writing Statistics")
     print("10. Exit")
 
     menu_choice = input("Enter your choice: ")
@@ -362,6 +550,21 @@ while True:
 
     elif menu_choice.lower() == "f":
         favorite_characters()
+
+    elif menu_choice.lower() == "p":
+        pinned_projects()
+
+    elif menu_choice.lower() == "g":
+        run_search(goals, "Goal")
+
+    elif menu_choice.lower() == "w":
+        writing_session()
+
+    elif menu_choice.lower() == "h":
+        session_history()
+
+    elif menu_choice.lower() == "s":
+        writing_statistics()
 
     elif menu_choice == "10":
         print("Goodbye!")
