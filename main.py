@@ -1,3 +1,4 @@
+import json
 from characters import characters
 from locations import locations
 from relationships import relationships
@@ -7,7 +8,11 @@ from projects import projects
 from goals import goals
 import random
 from tips import tips
-from sessions import sessions
+try:
+    with open("sessions.json", "r") as file:
+        sessions = json.load(file)
+except FileNotFoundError:
+    sessions = []
 
 
 def show_header(title):
@@ -131,40 +136,46 @@ def pinned_projects():
     print()
     input("Press Enter...")
 
-def writing_session():
+def session_history():
 
     print("=" * 30)
-    print("Writing Session")
+    print("Writing History")
     print("=" * 30)
     print()
 
-    project = input("Project: ")
-    goal = input("Goal (words): ")
+    if len(sessions) == 0:
+        print("No writing sessions yet.")
+
+    else:
+        total_words = 0
+
+        for number, session in enumerate(sessions, start=1):
+
+            print("Session", number)
+            print("-" * 15)
+
+            display_item(session)
+
+            total_words = total_words + int(session["Words"])
+
+            goal = int(session["Goal"])
+            words = int(session["Words"])
+            difference = words - goal
+
+            if difference >= 0:
+                print("Result:")
+                print("   Goal Achieved! (+" + str(difference) + " words)")
+            else:
+                print("Result:")
+                print("   Goal Missed (" + str(difference) + " words)")
+
+            print()
+
+        print("=" * 30)
+        print("Total Words Written:", total_words)
+        print("=" * 30)
 
     print()
-    input("Press Enter when you've finished writing...")
-
-    print()
-
-    words = input("Words written: ")
-
-    session = {
-        "Project": project,
-        "Goal": goal,
-        "Words": words
-    }
-
-    sessions.append(session)
-
-    print()
-    print("Session Saved!")
-    print()
-
-    print("Project :", project)
-    print("Goal    :", goal)
-    print("Written :", words)
-    print()
-
     input("Press Enter...")
 
 def writing_statistics():
@@ -239,16 +250,14 @@ def session_history():
 
         for number, session in enumerate(sessions, start=1):
             total_words = total_words + int(session["Words"])
-            
-            
 
             print("Session", number)
             print("-" * 15)
 
             display_item(session)
+
             goal = int(session["Goal"])
             words = int(session["Words"])
-
             difference = words - goal
 
             if difference >= 0:
@@ -260,11 +269,11 @@ def session_history():
 
             print()
 
-    print("=" * 30)
-    print("Total Words Written:", total_words)
-    print("=" * 30)
-    print()
+        print("=" * 30)
+        print("Total Words Written:", total_words)
+        print("=" * 30)
 
+    print()
     input("Press Enter...")
 
 def favorite_characters():
