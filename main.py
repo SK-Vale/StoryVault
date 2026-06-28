@@ -58,7 +58,13 @@ def project_overview():
         + len(notes)
         + len(projects)
         + len(goals)
+        + len(sessions)
     )
+
+    total_words = 0
+
+    for session in sessions:
+        total_words = total_words + int(session["Words"])
 
     print("=" * 30)
     print("Project Overview")
@@ -74,12 +80,19 @@ def project_overview():
     print("Notes          :", len(notes))
     print("Projects       :", len(projects))
     print("Goals          :", len(goals))
+    print("Writing Logs   :", len(sessions))
+    print()
+
+    print("Writer Dashboard")
+    print("-" * 20)
+    print("Current Writer :", settings["Username"])
+    print("Total Words    :", total_words)
     print()
 
     print("StoryVault Status")
     print("-" * 20)
     print("Total Entries  :", total_entries)
-    print("Version        : 1.2.0")
+    print("Version        :", settings["Version"])
     print("Status         : Prototype")
     print()
 
@@ -487,7 +500,7 @@ def run_search(database, label):
     input("Press Enter to return to the main menu...")
 
 
-show_header("        StoryVault v1.2.0")
+show_header("        StoryVault v1.3.0")
 
 if settings["Username"] == "Writer":
     player_name = input("What's your name? ")

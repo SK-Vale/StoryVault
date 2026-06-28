@@ -1,5 +1,6 @@
 {
     "Username": "writer",
     "Theme": "Classic",
-    "Default Goal": 500
+    "Default Goal": 500,
+    "Version": "1.3.0"
 }
