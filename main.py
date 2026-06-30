@@ -1,4 +1,6 @@
 import json
+from timeline import timeline
+from creatures import creatures
 from characters import characters
 from locations import locations
 from relationships import relationships
@@ -98,6 +100,39 @@ def project_overview():
 
     input("Press Enter...")
 
+def timeline_database():
+
+    print("=" * 30)
+    print("Timeline")
+    print("=" * 30)
+    print()
+
+    for key, event in timeline.items():
+
+        print("=" * 30)
+        print(event["Name"])
+        print("=" * 30)
+
+        display_item(event)
+
+    input("Press Enter...")
+
+def creature_database():
+
+    print("=" * 30)
+    print("Creatures")
+    print("=" * 30)
+    print()
+
+    for key, creature in creatures.items():
+
+        print("=" * 30)
+        print(creature["Name"])
+        print("=" * 30)
+
+        display_item(creature)
+
+    input("Press Enter...")
 
 def about():
     print("=" * 30)
@@ -319,7 +354,7 @@ def search_all():
     print("Search All")
     print("=" * 30)
 
-    search = input("Enter search: ")
+    search = input("Enter search: ").lower()
     print()
 
     databases = {
@@ -329,32 +364,45 @@ def search_all():
         "Relationship": relationships,
         "Note": notes,
         "Project": projects,
-        "Goal": goals
+        "Goal": goals,
+        "Timeline": timeline,
+        "creature": creatures
     }
 
     found = False
+    match_count = 0
 
     for label, database in databases.items():
         for key, item in database.items():
 
             if label == "Relationship":
-                if search.lower() in key.lower() or search.lower() in str(item).lower():
+                if search in key.lower() or search in str(item).lower():
                     print("=" * 30)
                     print(label + ":", key)
                     print("=" * 30)
                     display_item(item)
+                    print()
+
                     found = True
+                    match_count = match_count + 1
 
             else:
-                if search.lower() in str(item).lower():
+                if search in str(item).lower():
                     print("=" * 30)
                     print(label + ":", item["Name"])
                     print("=" * 30)
                     display_item(item)
+                    print()
+
                     found = True
+                    match_count = match_count + 1
 
     if not found:
         print("No results found.")
+    else:
+        print("=" * 30)
+        print("Matches Found:", match_count)
+        print("=" * 30)
 
     print()
     input("Press Enter...")
@@ -565,12 +613,10 @@ while True:
         run_search(world, "World")
 
     elif menu_choice == "4":
-        print("Creatures module coming soon!")
-        input("Press Enter to return to the main menu...")
+        creature_database()
 
     elif menu_choice == "5":
-        print("Timeline module coming soon!")
-        input("Press Enter to return to the main menu...")
+        timeline_database()
 
     elif menu_choice == "6":
         run_search(relationships, "Relationship")
