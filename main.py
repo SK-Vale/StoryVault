@@ -434,6 +434,74 @@ def save_characters():
     with open("characters.json", "w") as file:
         json.dump(characters, file, indent=4)
 
+def edit_character():
+
+    print("=" * 30)
+    print("Edit Character")
+    print("=" * 30)
+    print()
+
+    name = input("Character to edit: ")
+
+    if name not in characters:
+        print("Character not found.")
+        input("Press Enter...")
+        return
+
+    print()
+    print("Leave blank to keep current value.")
+    print()
+
+    age = input(f'Age ({characters[name]["Age"]}): ')
+    race = input(f'Race ({characters[name]["Race"]}): ')
+    status = input(f'Status ({characters[name]["Status"]}): ')
+
+    if age != "":
+        characters[name]["Age"] = age
+
+    if race != "":
+        characters[name]["Race"] = race
+
+    if status != "":
+        characters[name]["Status"] = status
+
+    save_characters()
+
+    print()
+    print("Character updated!")
+
+    input("Press Enter...")
+
+def delete_character():
+
+    print("=" * 30)
+    print("Delete Character")
+    print("=" * 30)
+    print()
+
+    name = input("Character to delete: ")
+
+    if name not in characters:
+        print("Character not found.")
+        input("Press Enter...")
+        return
+
+    print()
+    confirm = input(f'Delete "{name}"? (y/n): ').lower()
+
+    if confirm == "y":
+        del characters[name]
+        save_characters()
+
+        print()
+        print("Character deleted!")
+
+    else:
+        print()
+        print("Deletion cancelled.")
+
+    input("Press Enter...")
+
 def character_menu():
 
     while True:
@@ -445,7 +513,9 @@ def character_menu():
 
         print("1. View Characters")
         print("2. Add Character")
-        print("3. Back")
+        print("3. Edit Character")
+        print("4. Delete Character")
+        print("5. Back")
         print()
 
         choice = input("Choice: ")
@@ -457,7 +527,13 @@ def character_menu():
             add_character()
 
         elif choice == "3":
-            break
+            edit_character()
+
+        elif choice == "4":
+            delete_character()
+
+        elif choice == "5":
+            break  
 
         else:
             print("Invalid choice.")

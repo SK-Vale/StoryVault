@@ -10,11 +10,5 @@
         "Age": "24",
         "Race": "Elf",
         "Status": "Alive"
-    },
-    "bob": {
-        "Name": "bob",
-        "Age": "57",
-        "Race": "wizard",
-        "Status": "alive"
     }
 }
