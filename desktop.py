@@ -1,24 +1,28 @@
 import tkinter as tk
 import json
 
+from locations import locations
+
+
 with open("characters.json", "r") as file:
     characters = json.load(file)
 
-def show_character(character):
+
+def show_item(item):
 
     details = tk.Toplevel(window)
-    details.title(character["Name"])
+    details.title(item["Name"])
     details.geometry("400x350")
 
     title = tk.Label(
         details,
-        text=character["Name"],
+        text=item["Name"],
         font=("Arial", 20)
     )
 
     title.pack(pady=15)
 
-    for field, value in character.items():
+    for field, value in item.items():
 
         if field == "Name":
             continue
@@ -32,32 +36,37 @@ def show_character(character):
 
         label.pack(anchor="w", padx=20)
 
-def open_characters_window():
 
-    characters_window = tk.Toplevel(window)
-    characters_window.title("Characters")
-    characters_window.geometry("500x600")
+def open_database_window(title_text, data, subtitle_field=None):
+
+    database_window = tk.Toplevel(window)
+    database_window.title(title_text)
+    database_window.geometry("500x600")
 
     title = tk.Label(
-        characters_window,
-        text="Characters",
+        database_window,
+        text=title_text,
         font=("Arial", 20)
     )
 
     title.pack(pady=20)
 
-    for key, character in characters.items():
+    for key, item in data.items():
 
-        character_text = character["Name"] + " - " + character["Race"]
+        button_text = item["Name"]
+
+        if subtitle_field is not None and subtitle_field in item:
+            button_text = item["Name"] + " - " + item[subtitle_field]
 
         button = tk.Button(
-            characters_window,
-            text=character_text,
+            database_window,
+            text=button_text,
             width=30,
-            command=lambda c=character: show_character(c)
+            command=lambda i=item: show_item(i)
         )
 
         button.pack(pady=5)
+
 
 window = tk.Tk()
 
@@ -72,13 +81,58 @@ title = tk.Label(
 
 title.pack(pady=20)
 
+button_frame = tk.Frame(window)
+button_frame.pack(pady=20)
+
 characters_button = tk.Button(
-    window,
+    button_frame,
     text="Characters",
     width=20,
-    command=open_characters_window
+    command=lambda: open_database_window("Characters", characters, "Race")
 )
 
-characters_button.pack(pady=10)
+characters_button.grid(row=0, column=0, padx=10, pady=10)
+
+locations_button = tk.Button(
+    button_frame,
+    text="Locations",
+    width=20,
+    command=lambda: open_database_window("Locations", locations)
+)
+
+locations_button.grid(row=0, column=1, padx=10, pady=10)
+
+timeline_button = tk.Button(
+    button_frame,
+    text="Timeline",
+    width=20
+)
+
+timeline_button.grid(row=1, column=0, padx=10, pady=10)
+
+creatures_button = tk.Button(
+    button_frame,
+    text="Creatures",
+    width=20
+)
+
+creatures_button.grid(row=1, column=1, padx=10, pady=10)
+
+projects_button = tk.Button(
+    button_frame,
+    text="Projects",
+    width=20
+)
+
+projects_button.grid(row=2, column=0, padx=10, pady=10)
+
+exit_button = tk.Button(
+    button_frame,
+    text="Exit",
+    width=20,
+    command=window.destroy
+)
+
+exit_button.grid(row=2, column=1, padx=10, pady=10)
 
 window.mainloop()
