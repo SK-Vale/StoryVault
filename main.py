@@ -1,7 +1,8 @@
 import json
 from timeline import timeline
 from creatures import creatures
-from characters import characters
+with open("characters.json", "r") as file:
+    characters = json.load(file)
 from locations import locations
 from relationships import relationships
 from world import world
@@ -61,6 +62,8 @@ def project_overview():
         + len(projects)
         + len(goals)
         + len(sessions)
+        + len(creatures)
+        + len(timeline)
     )
 
     total_words = 0
@@ -83,6 +86,8 @@ def project_overview():
     print("Projects       :", len(projects))
     print("Goals          :", len(goals))
     print("Writing Logs   :", len(sessions))
+    print("Creatures      :", len(creatures))
+    print("Timeline Events:", len(timeline))
     print()
 
     print("Writer Dashboard")
@@ -407,57 +412,80 @@ def search_all():
     print()
     input("Press Enter...")
 
+def view_characters():
 
-def character_menu(character):
-    while True:
+    print("=" * 30)
+    print("Characters")
+    print("=" * 30)
+    print()
+
+    for key, character in characters.items():
+
         print("=" * 30)
         print(character["Name"])
         print("=" * 30)
-        print("1. General Information")
-        print("2. Relationships")
-        print("3. Timeline")
-        print("4. Notes")
-        print("5. Quotes")
-        print("6. Back")
 
-        choice = input("Choice: ")
+        display_item(character)
+
+    input("Press Enter...")
+
+def save_characters():
+
+    with open("characters.json", "w") as file:
+        json.dump(characters, file, indent=4)
+
+def character_menu():
+
+    while True:
+
+        print("=" * 30)
+        print("Characters")
+        print("=" * 30)
         print()
 
+        print("1. View Characters")
+        print("2. Add Character")
+        print("3. Back")
+        print()
+
+        choice = input("Choice: ")
+
         if choice == "1":
-            display_item(character)
-            input("Press Enter...")
+            view_characters()
 
         elif choice == "2":
-            character_name = character["Name"]
-
-            if character_name in relationships:
-                print("=" * 30)
-                print(character_name + " Relationships")
-                print("=" * 30)
-                display_item(relationships[character_name])
-            else:
-                print("No relationships found for", character_name + ".")
-
-            input("Press Enter...")
+            add_character()
 
         elif choice == "3":
-            print("Timeline coming soon!")
-            input("Press Enter...")
-
-        elif choice == "4":
-            print("Notes coming soon!")
-            input("Press Enter...")
-
-        elif choice == "5":
-            print("Quotes coming soon!")
-            input("Press Enter...")
-
-        elif choice == "6":
             break
 
         else:
             print("Invalid choice.")
-            input("Press Enter...")
+
+def add_character():
+
+    print("=" * 30)
+    print("Add Character")
+    print("=" * 30)
+    print()
+
+    name = input("Name: ")
+    age = input("Age: ")
+    race = input("Race: ")
+    status = input("Status: ")
+
+    characters[name] = {
+        "Name": name,
+        "Age": age,
+        "Race": race,
+        "Status": status
+        
+    }
+    save_characters()
+    print()
+    print(name, "added successfully!")
+
+    input("Press Enter...")
 
 
 def open_item(item, label, match):
@@ -604,7 +632,7 @@ while True:
         project_overview()
 
     elif menu_choice == "1":
-        run_search(characters, "Character")
+        character_menu()
 
     elif menu_choice == "2":
         run_search(locations, "Location")

@@ -1,0 +1,20 @@
+{
+    "Aria Vale": {
+        "Name": "Aria Vale",
+        "Age": "21",
+        "Race": "Human",
+        "Status": "Alive"
+    },
+    "Kael Thorn": {
+        "Name": "Kael Thorn",
+        "Age": "24",
+        "Race": "Elf",
+        "Status": "Alive"
+    },
+    "bob": {
+        "Name": "bob",
+        "Age": "57",
+        "Race": "wizard",
+        "Status": "alive"
+    }
+}
