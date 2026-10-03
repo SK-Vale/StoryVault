@@ -2,6 +2,8 @@ import tkinter as tk
 import json
 from creatures import creatures
 from locations import locations
+from timeline import timeline 
+from projects import projects
 
 
 with open("characters.json", "r") as file:
@@ -67,6 +69,15 @@ def open_database_window(title_text, data, subtitle_field=None):
 
         button.pack(pady=5)
 
+    back_button = tk.Button(
+        database_window,
+        text="Back",
+        width=20,
+        command=database_window.destroy
+    )
+
+    back_button.pack(pady=20)
+
 
 window = tk.Tk()
 
@@ -105,7 +116,8 @@ locations_button.grid(row=0, column=1, padx=10, pady=10)
 timeline_button = tk.Button(
     button_frame,
     text="Timeline",
-    width=20
+    width=20,
+    command=lambda: open_database_window("Timeline", timeline)
 )
 
 timeline_button.grid(row=1, column=0, padx=10, pady=10)
@@ -122,7 +134,8 @@ creatures_button.grid(row=1, column=1, padx=10, pady=10)
 projects_button = tk.Button(
     button_frame,
     text="Projects",
-    width=20
+    width=20,
+    command=lambda: open_database_window("Projects", projects)
 )
 
 projects_button.grid(row=2, column=0, padx=10, pady=10)

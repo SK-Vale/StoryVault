@@ -19,7 +19,7 @@ except FileNotFoundError:
 with open("settings.json", "r") as file:
     settings = json.load(file)
 from utils import print_header, pause 
-
+import tkinter as tk
 
 def show_header(title):
     print("=" * 40)
