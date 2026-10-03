@@ -53,6 +53,8 @@ def open_database_window(title_text, data, subtitle_field=None):
 
     title.pack(pady=20)
 
+
+
     for key, item in data.items():
 
         button_text = item["Name"]
@@ -91,6 +93,20 @@ title = tk.Label(
 )
 
 title.pack(pady=20)
+
+summary = tk.Label(
+    window,
+    text=(
+        f"{len(projects)} Projects  |  "
+        f"{len(characters)} Characters  |  "
+        f"{len(locations)} Locations\n"
+        f"{len(creatures)} Creatures  |  "
+        f"{len(timeline)} Timeline Events"
+    ),
+    font=("Arial", 11)
+)
+
+summary.pack(pady=10)
 
 button_frame = tk.Frame(window)
 button_frame.pack(pady=20)
