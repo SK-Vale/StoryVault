@@ -1,6 +1,6 @@
 import tkinter as tk
 import json
-
+from creatures import creatures
 from locations import locations
 
 
@@ -113,7 +113,8 @@ timeline_button.grid(row=1, column=0, padx=10, pady=10)
 creatures_button = tk.Button(
     button_frame,
     text="Creatures",
-    width=20
+    width=20,
+    command=lambda: open_database_window("Creatures", creatures)
 )
 
 creatures_button.grid(row=1, column=1, padx=10, pady=10)
