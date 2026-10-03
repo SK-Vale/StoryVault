@@ -9,6 +9,11 @@ from projects import projects
 with open("characters.json", "r") as file:
     characters = json.load(file)
 
+try:
+    with open("sessions.json", "r") as file:
+        sessions = json.load(file)
+except FileNotFoundError:
+    sessions = []
 
 def show_item(item):
 
@@ -80,6 +85,10 @@ def open_database_window(title_text, data, subtitle_field=None):
 
     back_button.pack(pady=20)
 
+total_words = 0
+
+for session in sessions:
+    total_words += int(session["Words"])
 
 window = tk.Tk()
 
@@ -97,13 +106,16 @@ title.pack(pady=20)
 summary = tk.Label(
     window,
     text=(
-        f"{len(projects)} Projects  |  "
-        f"{len(characters)} Characters  |  "
-        f"{len(locations)} Locations\n"
-        f"{len(creatures)} Creatures  |  "
-        f"{len(timeline)} Timeline Events"
-    ),
-    font=("Arial", 11)
+       f"{len(projects)} Projects  |  "
+       f"{len(characters)} Characters  |  "
+       f"{len(locations)} Locations\n"
+       f"{len(creatures)} Creatures  |  "
+       f"{len(timeline)} Timeline Events\n\n"
+       f"Writing Sessions: {len(sessions)}  |  "
+       f"Total Words: {total_words:,}"
+  ),
+  font=("Arial", 11)
+  
 )
 
 summary.pack(pady=10)
