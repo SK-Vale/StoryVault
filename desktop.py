@@ -143,7 +143,32 @@ def open_writing_session():
         project = project_entry.get()
         goal = goal_entry.get()
         words = words_entry.get()
+        if project == "" or goal == "" or words == "":
+            messagebox.showerror(
+                "Missing Information",
+                "Please fill in all fields.",
+                parent=session_window
+            )
+            return
+        
+        try:
+            goal = int(goal)
+            words = int(words)
+        except ValueError:
+            messagebox.showerror(
+                "Invalid Numbers",
+                "Word Goal and Words Written must be numbers.",
+                parent=session_window
+            )
+            return
 
+        if goal < 0 or words < 0:
+            messagebox.showerror(
+                "Invalid Numbers",
+                "Word Goal and Words Written cannot be negative.",
+                parent=session_window
+            )
+            return
 
         session = {
             "Project": project,
