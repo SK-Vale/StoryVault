@@ -122,19 +122,70 @@ def open_session_history():
     )
     title.pack(pady=20)
 
+    canvas = tk.Canvas(history_window)
+    scrollbar = tk.Scrollbar(
+        history_window,
+        orient="vertical",
+        command=canvas.yview
+    )
+
+    session_frame = tk.Frame(canvas)
+
+    session_frame.bind(
+        "<Configure>",
+        lambda event: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window(
+        (0, 0),
+        window=session_frame,
+        anchor="nw"
+    )
+
+    canvas.configure(
+        yscrollcommand=scrollbar.set
+    )
+    
+    def scroll_with_mouse(event):
+        canvas.yview_scroll(
+            int(-1 * (event.delta / 120)),
+            "units"
+    )
+
+    canvas.bind_all(
+        "<MouseWheel>",
+        scroll_with_mouse
+)
+    canvas.pack(
+        side="left",
+        fill="both",
+        expand=True,
+        padx=20
+    )
+
+    scrollbar.pack(
+        side="right",
+        fill="y"
+    )
+
     for session in sessions:
         session_text = (
             f"{session['Project']} | "
             f"Goal: {session['Goal']} | "
             f"Words: {session['Words']}"
         )
-
+    
         session_label = tk.Label(
-            history_window,
+            session_frame,
             text=session_text,
             font=("Arial", 11)
         )
-        session_label.pack(pady=5)
+        session_label.pack(
+            anchor="w",
+            pady=5
+        )
 
     back_button = tk.Button(
         history_window,
@@ -142,7 +193,11 @@ def open_session_history():
         width=20,
         command=history_window.destroy
     )
-    back_button.pack(pady=20)
+        
+    back_button.pack(
+        side="bottom",
+        pady=10
+    )
 
 def open_writing_session():
     session_window = tk.Toplevel(window)
