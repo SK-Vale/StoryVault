@@ -90,6 +90,69 @@ total_words = 0
 for session in sessions:
     total_words += int(session["Words"])
 
+def open_writing_session():
+    session_window = tk.Toplevel(window)
+    session_window.title("Writing Session")
+    session_window.geometry("400x400")
+
+    title = tk.Label(
+        session_window,
+        text="Writing Session",
+        font=("Arial", 20)
+    )
+    title.pack(pady=20)
+
+    project_label = tk.Label(session_window, text="Project")
+    project_label.pack()
+
+    project_entry = tk.Entry(session_window, width=30)
+    project_entry.pack(pady=5)
+
+    goal_label = tk.Label(session_window, text="Word Goal")
+    goal_label.pack()
+
+    goal_entry = tk.Entry(session_window, width=30)
+    goal_entry.pack(pady=5)
+
+    words_label = tk.Label(session_window, text="Words Written")
+    words_label.pack()
+
+    words_entry = tk.Entry(session_window, width=30)
+    words_entry.pack(pady=5)
+
+    def save_session():
+        project = project_entry.get()
+        goal = goal_entry.get()
+        words = words_entry.get()
+
+        session = {
+            "Project": project,
+            "Goal": goal,
+            "Words": words
+        }
+
+        sessions.append(session)
+
+        with open("sessions.json", "w") as file:
+            json.dump(sessions, file, indent=4)
+
+    save_button = tk.Button(
+        session_window,
+        text="Save Session",
+        width=20,
+        command=save_session
+    )
+    save_button.pack(pady=10)
+
+    back_button = tk.Button(
+        session_window,
+        text="Back",
+        width=20,
+        command=session_window.destroy
+    )
+    back_button.pack(pady=20)
+
+
 window = tk.Tk()
 
 window.title("StoryVault")
@@ -177,4 +240,21 @@ exit_button = tk.Button(
 
 exit_button.grid(row=2, column=1, padx=10, pady=10)
 
+
+
+writing_session_button = tk.Button(
+    button_frame,
+    text="Writing Session",
+    width=20,
+    command=open_writing_session
+)
+
+writing_session_button.grid(
+    row=3,
+    column=0,
+    columnspan=2,
+    pady=10
+)
+
+ 
 window.mainloop()

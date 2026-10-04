@@ -1,1 +1,7 @@
-[]
+[
+    {
+        "Project": "test project",
+        "Goal": "1000",
+        "Words": "420"
+    }
+]
