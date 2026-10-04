@@ -109,6 +109,41 @@ def refresh_dashboard():
             f"Total Words: {total_words:,}"
         )
     )
+
+def open_session_history():
+    history_window = tk.Toplevel(window)
+    history_window.title("Writing Session History")
+    history_window.geometry("500x500")
+
+    title = tk.Label(
+        history_window,
+        text="Writing Session History",
+        font=("Arial", 20)
+    )
+    title.pack(pady=20)
+
+    for session in sessions:
+        session_text = (
+            f"{session['Project']} | "
+            f"Goal: {session['Goal']} | "
+            f"Words: {session['Words']}"
+        )
+
+        session_label = tk.Label(
+            history_window,
+            text=session_text,
+            font=("Arial", 11)
+        )
+        session_label.pack(pady=5)
+
+    back_button = tk.Button(
+        history_window,
+        text="Back",
+        width=20,
+        command=history_window.destroy
+    )
+    back_button.pack(pady=20)
+
 def open_writing_session():
     session_window = tk.Toplevel(window)
     session_window.title("Writing Session")
@@ -316,5 +351,18 @@ writing_session_button.grid(
     pady=10
 )
 
+history_button = tk.Button(
+    button_frame,
+    text="Session History",
+    width=20,
+    command=open_session_history
+)
+
+history_button.grid(
+    row=4,
+    column=0,
+    columnspan=2,
+    pady=10
+)
  
 window.mainloop()
