@@ -393,35 +393,7 @@ def open_session_history():
         side="right",
         fill="y"
     )
-
-    for session in sessions:
-        session_text = (
-            f"{session['Project']} | "
-            f"Goal: {session['Goal']} | "
-            f"Words: {session['Words']}"
-        )
-    
-        session_label = tk.Label(
-            session_frame,
-            text=session_text,
-            font=("Arial", 11)
-        )
-        session_label.pack(
-            anchor="w",
-            pady=5
-        )
-
-    back_button = tk.Button(
-        history_window,
-        text="Back",
-        width=20,
-        command=history_window.destroy
-    )
-        
-    back_button.pack(
-        side="bottom",
-        pady=10
-    )
+   
 
 def open_writing_session():
     session_window = tk.Toplevel(window)
