@@ -1,3 +1,5 @@
+import os
+import sys
 import tkinter as tk
 from tkinter import messagebox
 import json
@@ -6,12 +8,19 @@ from locations import locations
 from timeline import timeline 
 from projects import projects
 
+def get_data_path(filename):
+    if getattr(sys, "frozen", False):
+        base_path = os.path.dirname(sys.executable)
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
 
-with open("characters.json", "r") as file:
+    return os.path.join(base_path, filename)
+
+with open(get_data_path("characters.json"), "r") as file:
     characters = json.load(file)
 
 try:
-    with open("sessions.json", "r") as file:
+    with open(get_data_path("sessions.json"), "r") as file:
         sessions = json.load(file)
 except FileNotFoundError:
     sessions = []
@@ -109,6 +118,162 @@ def refresh_dashboard():
             f"Total Words: {total_words:,}"
         )
     )
+def open_writing_statistics():
+    stats_window = tk.Toplevel(window)
+    stats_window.title("Writing Statistics")
+    stats_window.geometry("500x500")
+
+    title = tk.Label(
+        stats_window,
+        text="Writing Statistics",
+        font=("Arial", 20)
+    )
+    title.pack(pady=20)
+
+    # ----- Calculate statistics -----
+
+    total_sessions = len(sessions)
+
+    total_words = 0
+    goals_hit = 0
+    goals_missed = 0
+    best_session = None
+    words_by_project = {}
+
+    for session in sessions:
+        words = int(session["Words"])
+        goal = int(session["Goal"])
+
+        total_words += words
+
+        project = session["Project"]
+
+        if project in words_by_project:
+            words_by_project[project] += words
+        else:
+            words_by_project[project] = words
+
+        if best_session is None or words > int(best_session["Words"]):
+            best_session = session
+
+        if words >= goal:
+            goals_hit += 1
+        else:
+            goals_missed += 1
+
+    if total_sessions > 0:
+        average_words = total_words // total_sessions
+    else:
+        average_words = 0
+
+    if best_session:
+        best_session_text = (
+            f"{best_session['Project']} "
+            f"({int(best_session['Words']):,} words)"
+        )
+    else:
+        best_session_text = "No sessions yet"
+
+    project_stats_text = ""
+
+    for project, words in words_by_project.items():
+        project_stats_text += (
+            f"{project}: {words:,} words\n"
+        )
+
+    stats_text = (
+        f"Total Sessions: {total_sessions}\n\n"
+        f"Total Words: {total_words:,}\n\n"
+        f"Average Words Per Session: {average_words:,}\n\n"
+        f"Best Session: {best_session_text}\n\n"
+        f"Goals Hit: {goals_hit}\n\n"
+        f"Goals Missed: {goals_missed}\n\n"
+        f"Words By Project:\n"
+        f"{project_stats_text}"
+    )
+
+    # ----- Scrollable statistics area -----
+
+    content_frame = tk.Frame(stats_window)
+    content_frame.pack(
+        fill="both",
+        expand=True,
+        padx=20
+    )
+
+    canvas = tk.Canvas(content_frame)
+
+    scrollbar = tk.Scrollbar(
+        content_frame,
+        orient="vertical",
+        command=canvas.yview
+    )
+
+    stats_frame = tk.Frame(canvas)
+
+    stats_frame.bind(
+        "<Configure>",
+        lambda event: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window(
+        (0, 0),
+        window=stats_frame,
+        anchor="nw"
+    )
+
+    canvas.configure(
+        yscrollcommand=scrollbar.set
+    )
+
+    def scroll_with_mouse(event):
+        canvas.yview_scroll(
+            int(-1 * (event.delta / 120)),
+            "units"
+        )
+
+    stats_window.bind(
+        "<MouseWheel>",
+        scroll_with_mouse
+    )
+
+    canvas.pack(
+        side="left",
+        fill="both",
+        expand=True
+    )
+
+    scrollbar.pack(
+        side="right",
+        fill="y"
+    )
+
+    stats_label = tk.Label(
+        stats_frame,
+        text=stats_text,
+        font=("Arial", 12),
+        justify="left"
+    )
+
+    stats_label.pack(
+        anchor="w",
+        pady=10
+    )
+
+    # ----- Permanent Back button -----
+
+    back_button = tk.Button(
+        stats_window,
+        text="Back",
+        width=20,
+        command=stats_window.destroy
+    )
+
+    back_button.pack(
+        pady=10
+    )
 
 def open_session_history():
     history_window = tk.Toplevel(window)
@@ -122,9 +287,17 @@ def open_session_history():
     )
     title.pack(pady=20)
 
-    canvas = tk.Canvas(history_window)
+    content_frame = tk.Frame(history_window)
+    content_frame.pack(
+        fill="both",
+        expand=True,
+        padx=20
+    )
+
+    canvas = tk.Canvas(content_frame)
+
     scrollbar = tk.Scrollbar(
-        history_window,
+        content_frame,
         orient="vertical",
         command=canvas.yview
     )
@@ -146,6 +319,57 @@ def open_session_history():
 
     canvas.configure(
         yscrollcommand=scrollbar.set
+    )
+
+    def scroll_with_mouse(event):
+        canvas.yview_scroll(
+            int(-1 * (event.delta / 120)),
+            "units"
+        )
+
+    history_window.bind(
+        "<MouseWheel>",
+        scroll_with_mouse
+    )
+
+    canvas.pack(
+        side="left",
+        fill="both",
+        expand=True
+    )
+
+    scrollbar.pack(
+        side="right",
+        fill="y"
+    )
+
+    for session in sessions:
+        session_text = (
+            f"{session['Project']} | "
+            f"Goal: {session['Goal']} | "
+            f"Words: {session['Words']}"
+        )
+
+        session_label = tk.Label(
+            session_frame,
+            text=session_text,
+            font=("Arial", 11)
+        )
+
+        session_label.pack(
+            anchor="w",
+            pady=5
+        )
+
+    back_button = tk.Button(
+        history_window,
+        text="Back",
+        width=20,
+        command=history_window.destroy
+    )
+
+    back_button.pack(
+        pady=10
     )
     
     def scroll_with_mouse(event):
@@ -268,7 +492,7 @@ def open_writing_session():
 
         sessions.append(session)
 
-        with open("sessions.json", "w") as file:
+        with open(get_data_path("sessions.json"), "w") as file:
             json.dump(sessions, file, indent=4)
             
         refresh_dashboard()
@@ -405,6 +629,12 @@ writing_session_button.grid(
     columnspan=2,
     pady=10
 )
+stats_button = tk.Button(
+    button_frame,
+    text="Writing Statistics",
+    width=20,
+    command=open_writing_statistics
+)
 
 history_button = tk.Button(
     button_frame,
@@ -419,5 +649,10 @@ history_button.grid(
     columnspan=2,
     pady=10
 )
- 
+stats_button.grid(
+    row=5,
+    column=0,
+    columnspan=2,
+    pady=10
+)
 window.mainloop()
