@@ -8,5 +8,30 @@
         "Project": "sample novel",
         "Goal": "500",
         "Words": "100"
+    },
+    {
+        "Project": "side project",
+        "Goal": "1000",
+        "Words": "300"
+    },
+    {
+        "Project": "fantasy",
+        "Goal": "5000",
+        "Words": "2500"
+    },
+    {
+        "Project": "scifi",
+        "Goal": "500",
+        "Words": "30"
+    },
+    {
+        "Project": "romance",
+        "Goal": "1000",
+        "Words": "250"
+    },
+    {
+        "Project": "biography",
+        "Goal": "10000",
+        "Words": "3400"
     }
 ]

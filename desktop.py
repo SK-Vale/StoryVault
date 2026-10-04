@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import json
 from creatures import creatures
 from locations import locations
@@ -143,6 +144,7 @@ def open_writing_session():
         goal = goal_entry.get()
         words = words_entry.get()
 
+
         session = {
             "Project": project,
             "Goal": goal,
@@ -155,6 +157,20 @@ def open_writing_session():
             json.dump(sessions, file, indent=4)
             
         refresh_dashboard()
+
+        project_entry.delete(0, tk.END)
+        goal_entry.delete(0, tk.END)
+        words_entry.delete(0, tk.END)
+
+        messagebox.showinfo(
+            "Session Saved",
+            "Writing session saved successfully!",
+            parent=session_window
+        )
+
+        session=window.lift()
+        session_window.focus_force()
+
     save_button = tk.Button(
         session_window,
         text="Save Session",
