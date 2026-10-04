@@ -3,5 +3,10 @@
         "Project": "test project",
         "Goal": "1000",
         "Words": "420"
+    },
+    {
+        "Project": "sample novel",
+        "Goal": "500",
+        "Words": "100"
     }
 ]

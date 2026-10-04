@@ -90,6 +90,24 @@ total_words = 0
 for session in sessions:
     total_words += int(session["Words"])
 
+
+def refresh_dashboard():
+    total_words = 0
+
+    for session in sessions:
+        total_words += int(session["Words"])
+
+    summary.config(
+        text=(
+            f"{len(projects)} Projects  |  "
+            f"{len(characters)} Characters  |  "
+            f"{len(locations)} Locations\n"
+            f"{len(creatures)} Creatures  |  "
+            f"{len(timeline)} Timeline Events\n\n"
+            f"Writing Sessions: {len(sessions)}  |  "
+            f"Total Words: {total_words:,}"
+        )
+    )
 def open_writing_session():
     session_window = tk.Toplevel(window)
     session_window.title("Writing Session")
@@ -135,7 +153,8 @@ def open_writing_session():
 
         with open("sessions.json", "w") as file:
             json.dump(sessions, file, indent=4)
-
+            
+        refresh_dashboard()
     save_button = tk.Button(
         session_window,
         text="Save Session",
