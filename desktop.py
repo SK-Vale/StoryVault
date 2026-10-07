@@ -312,30 +312,49 @@ def open_session_history():
     history_window = tk.Toplevel(window)
     history_window.title("Writing Session History")
     history_window.geometry("500x500")
+    history_window.configure(bg=BG)
 
     title = tk.Label(
         history_window,
         text="Writing Session History",
-        font=("Arial", 20)
+        font=("Arial", 20),
+        bg=BG,
+        fg=GOLD
     )
     title.pack(pady=20)
 
-    content_frame = tk.Frame(history_window)
+    content_frame = tk.Frame(
+        history_window,
+        bg=BG,
+        highlightthickness=0,
+        borderwidth=0,
+        relief="flat"
+    )
+
     content_frame.pack(
         fill="both",
         expand=True,
         padx=20
     )
 
-    canvas = tk.Canvas(content_frame)
-
+    canvas = tk.Canvas(
+        content_frame,
+        bg=BG,
+        highlightthickness=0
+    )
+    
     scrollbar = tk.Scrollbar(
         content_frame,
         orient="vertical",
         command=canvas.yview
     )
 
-    session_frame = tk.Frame(canvas)
+    session_frame = tk.Frame(
+        canvas,
+        bg=BG,
+        borderwidth=0,
+        highlightthickness=0
+    )
 
     session_frame.bind(
         "<Configure>",
@@ -386,7 +405,11 @@ def open_session_history():
         session_label = tk.Label(
             session_frame,
             text=session_text,
-            font=("Arial", 11)
+            font=("Arial", 11),
+            bg=BG,
+            fg=TEXT,
+            borderwidth=0,
+            highlightthickness=0,
         )
 
         session_label.pack(
@@ -398,18 +421,14 @@ def open_session_history():
         history_window,
         text="Back",
         width=20,
-        command=history_window.destroy
+        command=history_window.destroy,
+        **BUTTON_STYLE
     )
 
     back_button.pack(
         pady=10
     )
     
-    def scroll_with_mouse(event):
-        canvas.yview_scroll(
-            int(-1 * (event.delta / 120)),
-            "units"
-    )
 
     canvas.bind_all(
         "<MouseWheel>",
@@ -467,30 +486,71 @@ def open_writing_session():
     session_window = tk.Toplevel(window)
     session_window.title("Writing Session")
     session_window.geometry("400x400")
+    session_window.configure(bg=BG)
 
     title = tk.Label(
         session_window,
         text="Writing Session",
-        font=("Arial", 20)
+        font=("Arial", 20),
+        bg=BG,
+        fg=GOLD
     )
     title.pack(pady=20)
 
-    project_label = tk.Label(session_window, text="Project")
+    project_label = tk.Label(
+           session_window,
+           text="Project",
+           bg=BG,
+           fg=TEXT
+)
     project_label.pack()
 
-    project_entry = tk.Entry(session_window, width=30)
+    project_entry = tk.Entry(
+           session_window,
+           width=30,
+           bg=PANEL,
+           fg=TEXT, 
+           insertbackground=GOLD,
+           relief="flat"
+)
     project_entry.pack(pady=5)
 
-    goal_label = tk.Label(session_window, text="Word Goal")
+
+    goal_label = tk.Label(
+        session_window,
+        text="Word Goal",
+        bg=BG,
+        fg=TEXT
+)
     goal_label.pack()
 
-    goal_entry = tk.Entry(session_window, width=30)
+    goal_entry = tk.Entry(
+        session_window,
+        width=30,
+        bg=PANEL,
+        fg=TEXT,
+        insertbackground=GOLD,
+        relief="flat"
+)
     goal_entry.pack(pady=5)
 
-    words_label = tk.Label(session_window, text="Words Written")
+
+    words_label = tk.Label(
+         session_window,
+         text="Words Written",
+         bg=BG,
+         fg=TEXT
+)
     words_label.pack()
 
-    words_entry = tk.Entry(session_window, width=30)
+    words_entry = tk.Entry(
+         session_window,
+        width=30,
+        bg=PANEL,
+        fg=TEXT,
+        insertbackground=GOLD,
+        relief="flat"
+)
     words_entry.pack(pady=5)
 
 
@@ -506,7 +566,7 @@ def open_writing_session():
                 parent=session_window
             )
             return
-        
+
         try:
             goal = int(goal)
             words = int(words)
@@ -536,7 +596,7 @@ def open_writing_session():
 
         with open(get_data_path("sessions.json"), "w") as file:
             json.dump(sessions, file, indent=4)
-            
+
         refresh_dashboard()
 
         project_entry.delete(0, tk.END)
@@ -549,14 +609,15 @@ def open_writing_session():
             parent=session_window
         )
 
-        session=window.lift()
+        window.lift()
         session_window.focus_force()
 
     save_button = tk.Button(
         session_window,
         text="Save Session",
         width=20,
-        command=save_session
+        command=save_session,
+        **BUTTON_STYLE
     )
     save_button.pack(pady=10)
 
@@ -564,7 +625,8 @@ def open_writing_session():
         session_window,
         text="Back",
         width=20,
-        command=session_window.destroy
+        command=session_window.destroy,
+        **BUTTON_STYLE
     )
     back_button.pack(pady=20)
 
