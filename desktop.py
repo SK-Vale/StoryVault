@@ -394,6 +394,41 @@ def open_session_history():
         fill="y"
     )
    
+def open_about():
+    about_window = tk.Toplevel(window)
+    about_window.title("About StoryVault")
+    about_window.geometry("400x350")
+
+    title = tk.Label(
+        about_window,
+        text="StoryVault",
+        font=("Arial", 20)
+    )
+    title.pack(pady=20)
+
+    about_text = (
+        "Version 0.2\n\n"
+        "Created by S.K. Vale\n\n"
+        "A desktop writing companion for authors.\n\n"
+        "Built with Python\n"
+        "Available on Windows and macOS"
+    )
+
+    info = tk.Label(
+        about_window,
+        text=about_text,
+        font=("Arial", 11),
+        justify="center"
+    )
+    info.pack(pady=20)
+
+    back_button = tk.Button(
+        about_window,
+        text="Back",
+        width=20,
+        command=about_window.destroy
+    )
+    back_button.pack(pady=20)
 
 def open_writing_session():
     session_window = tk.Toplevel(window)
@@ -424,6 +459,8 @@ def open_writing_session():
 
     words_entry = tk.Entry(session_window, width=30)
     words_entry.pack(pady=5)
+
+
 
     def save_session():
         project = project_entry.get()
@@ -511,7 +548,13 @@ title = tk.Label(
 )
 
 title.pack(pady=20)
+version_label = tk.Label(
+    window,
+    text="Version 0.2",
+    font=("Arial", 10)
+)
 
+version_label.pack()
 summary = tk.Label(
     window,
     text=(
@@ -586,7 +629,19 @@ exit_button = tk.Button(
 
 exit_button.grid(row=2, column=1, padx=10, pady=10)
 
+about_button = tk.Button(
+    button_frame,
+    text="About",
+    width=20,
+    command=open_about
+)
 
+about_button.grid(
+    row=6,
+    column=0,
+    columnspan=2,
+    pady=10
+)
 
 writing_session_button = tk.Button(
     button_frame,
