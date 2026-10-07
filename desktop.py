@@ -155,11 +155,14 @@ def open_writing_statistics():
     stats_window = tk.Toplevel(window)
     stats_window.title("Writing Statistics")
     stats_window.geometry("500x500")
+    stats_window.configure(bg=BG)
 
     title = tk.Label(
         stats_window,
         text="Writing Statistics",
-        font=("Arial", 20)
+        font=("Arial", 20),
+        bg=BG,
+        fg=GOLD
     )
     title.pack(pady=20)
 
@@ -227,22 +230,36 @@ def open_writing_statistics():
 
     # ----- Scrollable statistics area -----
 
-    content_frame = tk.Frame(stats_window)
+    content_frame = tk.Frame(
+        stats_window,
+        bg=BG
+    )
     content_frame.pack(
         fill="both",
         expand=True,
         padx=20
     )
 
-    canvas = tk.Canvas(content_frame)
+    canvas = tk.Canvas(
+        content_frame,
+        bg=BG
+    )
 
     scrollbar = tk.Scrollbar(
         content_frame,
         orient="vertical",
-        command=canvas.yview
+        command=canvas.yview,
+        bg=BUTTON_BG,
+        activebackground=BUTTON_ACTIVE,
+        troughcolor=BG,
+        highlightthickness=0,
+        borderwidth=0
     )
 
-    stats_frame = tk.Frame(canvas)
+    stats_frame = tk.Frame(
+        canvas,
+        bg=BG
+    )
 
     stats_frame.bind(
         "<Configure>",
@@ -287,7 +304,9 @@ def open_writing_statistics():
         stats_frame,
         text=stats_text,
         font=("Arial", 12),
-        justify="left"
+        justify="left",
+        bg=BG,
+        fg=TEXT
     )
 
     stats_label.pack(
@@ -301,7 +320,8 @@ def open_writing_statistics():
         stats_window,
         text="Back",
         width=20,
-        command=stats_window.destroy
+        command=stats_window.destroy,
+        **BUTTON_STYLE
     )
 
     back_button.pack(
@@ -450,11 +470,14 @@ def open_about():
     about_window = tk.Toplevel(window)
     about_window.title("About StoryVault")
     about_window.geometry("400x350")
+    about_window.configure(bg=BG)
 
     title = tk.Label(
         about_window,
         text="StoryVault",
-        font=("Arial", 20)
+        font=("Arial", 20),
+        bg=BG,
+        fg=GOLD
     )
     title.pack(pady=20)
 
@@ -470,7 +493,9 @@ def open_about():
         about_window,
         text=about_text,
         font=("Arial", 11),
-        justify="center"
+        justify="center",
+        bg=BG,
+        fg=TEXT
     )
     info.pack(pady=20)
 
@@ -478,7 +503,8 @@ def open_about():
         about_window,
         text="Back",
         width=20,
-        command=about_window.destroy
+        command=about_window.destroy,
+        **BUTTON_STYLE
     )
     back_button.pack(pady=20)
 
