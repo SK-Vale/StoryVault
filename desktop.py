@@ -656,12 +656,82 @@ def open_writing_session():
     )
     back_button.pack(pady=20)
 
+def open_projects():
+    pprojects_window = tk.Toplevel(window)
+    pprojects_window.title("Projects")
+    pprojects_window.geometry("500x600")
+    pprojects_window.configure(bg=BG)
+
+    title = tk.Label(
+        pprojects_window,
+        text="Projects",
+        font=("Arial", 20, "bold"),
+        bg=BG,
+        fg=GOLD
+    )
+    title.pack(pady=20)
+
+    for project in projects.values():
+        project_card=tk.Frame(
+            pprojects_window,
+            bg=PANEL,
+            padx=20,
+            pady=15
+        )
+        project_card.pack(
+            fill="x",
+            padx=30,
+            pady=10 
+        )
+        project_name = tk.Label(
+            project_card,
+            text=project["Name"],
+            font=("Arial", 16, "bold"),
+            bg=PANEL,
+            fg=GOLD
+        )
+        project_name.pack(anchor="w")
+
+        project_info = tk.Label(
+            project_card,
+            text=(
+                f"Genre: {project['Genre']} | "
+                f"status: {project['Status']} | "
+            ),
+            font=("Arial", 11),
+            bg=PANEL,
+            fg=TEXT,
+            justify="left"
+        )
+        project-info.pack(
+            anchor="w", 
+            pady=(8,0)
+        )
+
+        if project["Pinned"] == "Yes":
+            pinned_label = tk.Label(
+                project_card,
+                text="Pinned",
+                font=("Arial", 10, "italic"),
+                bg=PANEL,
+                fg=GOLD
+            )
+            pinned_label.pack(
+                anchor="w", 
+                pady=(8,0))  
+             
+        project_name.pack()
+        
+    back_button = tk.Button(
+        pprojects_window,
+        text="Back",
+        width=20,
+        command=pprojects_window.destroy,
+        **BUTTON_STYLE
+    )
+    back_button.pack(pady=20)
 
 window = tk.Tk()
-
-window.title("StoryVault")
-window.geometry("500x600")
-
 window.configure(bg=BG)
 
 title = tk.Label(
@@ -743,7 +813,7 @@ creatures_button = tk.Button(
     button_frame,
     text="Creatures",
     width=20,
-    command=lambda: open_database_window("Creatures", creatures),
+    command=lambda: open_database_window("Creatures", creatures, "Type"),
     **BUTTON_STYLE
 )
 
@@ -753,7 +823,7 @@ projects_button = tk.Button(
     button_frame,
     text="Projects",
     width=20,
-    command=lambda: open_database_window("Projects", projects),
+    command=open_projects,
     **BUTTON_STYLE
 )
 
