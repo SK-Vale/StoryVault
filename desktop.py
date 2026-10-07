@@ -8,6 +8,29 @@ from locations import locations
 from timeline import timeline 
 from projects import projects
 
+# =========================
+# STORYVAULT THEME
+# =========================
+
+BG = "#120F18"
+PANEL = "#211A24"
+GOLD = "#D6A84B"
+TEXT = "#F3E8D0"
+MUTED = "#B7A78F"
+
+BUTTON_BG = "#3A2A20"
+BUTTON_TEXT = "#F3E8D0"
+BUTTON_ACTIVE = "#5A402B"
+
+BUTTON_STYLE = {
+    "bg": BUTTON_BG,
+    "fg": BUTTON_TEXT,
+    "activebackground": BUTTON_ACTIVE,
+    "activeforeground": TEXT,
+    "relief": "flat",
+    "borderwidth": 0
+}
+
 def get_data_path(filename):
     if getattr(sys, "frozen", False):
         base_path = os.path.dirname(sys.executable)
@@ -541,20 +564,28 @@ window = tk.Tk()
 window.title("StoryVault")
 window.geometry("500x600")
 
+window.configure(bg=BG)
+
 title = tk.Label(
     window,
     text="StoryVault",
-    font=("Arial", 24)
+    font=("Arial", 24, "bold"),
+    bg=BG,
+    fg=GOLD
 )
 
-title.pack(pady=20)
+title.pack(pady=(20, 5))
+
 version_label = tk.Label(
     window,
     text="Version 0.2",
-    font=("Arial", 10)
+    font=("Arial", 10),
+    bg=BG,
+    fg=MUTED
 )
 
 version_label.pack()
+
 summary = tk.Label(
     window,
     text=(
@@ -566,20 +597,26 @@ summary = tk.Label(
        f"Writing Sessions: {len(sessions)}  |  "
        f"Total Words: {total_words:,}"
   ),
-  font=("Arial", 11)
+  font=("Arial", 11),
+  bg=BG,
+  fg=TEXT
   
 )
 
 summary.pack(pady=10)
 
-button_frame = tk.Frame(window)
+button_frame = tk.Frame(
+    window,
+    bg=BG
+)
 button_frame.pack(pady=20)
 
 characters_button = tk.Button(
     button_frame,
     text="Characters",
     width=20,
-    command=lambda: open_database_window("Characters", characters, "Race")
+    command=lambda: open_database_window("Characters", characters, "Race"),
+    **BUTTON_STYLE
 )
 
 characters_button.grid(row=0, column=0, padx=10, pady=10)
@@ -588,7 +625,8 @@ locations_button = tk.Button(
     button_frame,
     text="Locations",
     width=20,
-    command=lambda: open_database_window("Locations", locations)
+    command=lambda: open_database_window("Locations", locations),
+    **BUTTON_STYLE
 )
 
 locations_button.grid(row=0, column=1, padx=10, pady=10)
@@ -597,7 +635,8 @@ timeline_button = tk.Button(
     button_frame,
     text="Timeline",
     width=20,
-    command=lambda: open_database_window("Timeline", timeline)
+    command=lambda: open_database_window("Timeline", timeline),
+    **BUTTON_STYLE
 )
 
 timeline_button.grid(row=1, column=0, padx=10, pady=10)
@@ -606,7 +645,8 @@ creatures_button = tk.Button(
     button_frame,
     text="Creatures",
     width=20,
-    command=lambda: open_database_window("Creatures", creatures)
+    command=lambda: open_database_window("Creatures", creatures),
+    **BUTTON_STYLE
 )
 
 creatures_button.grid(row=1, column=1, padx=10, pady=10)
@@ -615,7 +655,8 @@ projects_button = tk.Button(
     button_frame,
     text="Projects",
     width=20,
-    command=lambda: open_database_window("Projects", projects)
+    command=lambda: open_database_window("Projects", projects),
+    **BUTTON_STYLE
 )
 
 projects_button.grid(row=2, column=0, padx=10, pady=10)
@@ -624,7 +665,8 @@ exit_button = tk.Button(
     button_frame,
     text="Exit",
     width=20,
-    command=window.destroy
+    command=window.destroy,
+    **BUTTON_STYLE
 )
 
 exit_button.grid(row=2, column=1, padx=10, pady=10)
@@ -633,7 +675,8 @@ about_button = tk.Button(
     button_frame,
     text="About",
     width=20,
-    command=open_about
+    command=open_about,
+    **BUTTON_STYLE
 )
 
 about_button.grid(
@@ -647,7 +690,8 @@ writing_session_button = tk.Button(
     button_frame,
     text="Writing Session",
     width=20,
-    command=open_writing_session
+    command=open_writing_session,
+    **BUTTON_STYLE
 )
 
 writing_session_button.grid(
@@ -655,19 +699,22 @@ writing_session_button.grid(
     column=0,
     columnspan=2,
     pady=10
+
 )
 stats_button = tk.Button(
     button_frame,
     text="Writing Statistics",
     width=20,
-    command=open_writing_statistics
+    command=open_writing_statistics,
+    **BUTTON_STYLE
 )
 
 history_button = tk.Button(
     button_frame,
     text="Session History",
     width=20,
-    command=open_session_history
+    command=open_session_history,
+    **BUTTON_STYLE
 )
 
 history_button.grid(
