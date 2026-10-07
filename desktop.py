@@ -53,11 +53,14 @@ def show_item(item):
     details = tk.Toplevel(window)
     details.title(item["Name"])
     details.geometry("400x350")
+    details.configure(bg=BG)
 
     title = tk.Label(
         details,
         text=item["Name"],
-        font=("Arial", 20)
+        font=("Arial", 20, "bold"),
+        bg=BG,
+        fg=GOLD
     )
 
     title.pack(pady=15)
@@ -71,7 +74,9 @@ def show_item(item):
             details,
             text=f"{field}: {value}",
             font=("Arial", 12),
-            anchor="w"
+            anchor="w",
+            bg=BG,
+            fg=TEXT
         )
 
         label.pack(anchor="w", padx=20)
@@ -82,12 +87,15 @@ def open_database_window(title_text, data, subtitle_field=None):
     database_window = tk.Toplevel(window)
     database_window.title(title_text)
     database_window.geometry("500x600")
+    database_window.configure(bg=BG)
 
     title = tk.Label(
-        database_window,
-        text=title_text,
-        font=("Arial", 20)
-    )
+    database_window,
+    text=title_text,
+    font=("Arial", 20, "bold"),
+    bg=BG,
+    fg=GOLD
+)
 
     title.pack(pady=20)
 
@@ -104,7 +112,8 @@ def open_database_window(title_text, data, subtitle_field=None):
             database_window,
             text=button_text,
             width=30,
-            command=lambda i=item: show_item(i)
+            command=lambda i=item: show_item(i),
+            **BUTTON_STYLE
         )
 
         button.pack(pady=5)
@@ -113,7 +122,8 @@ def open_database_window(title_text, data, subtitle_field=None):
         database_window,
         text="Back",
         width=20,
-        command=database_window.destroy
+        command=database_window.destroy,
+        **BUTTON_STYLE
     )
 
     back_button.pack(pady=20)
