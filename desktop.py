@@ -48,38 +48,121 @@ try:
 except FileNotFoundError:
     sessions = []
 
-def show_item(item):
 
+def show_item(item):
     details = tk.Toplevel(window)
     details.title(item["Name"])
-    details.geometry("400x350")
+    details.geometry("500x600")
     details.configure(bg=BG)
 
+    # Character / item title
     title = tk.Label(
         details,
         text=item["Name"],
-        font=("Arial", 20, "bold"),
+        font=("Arial", 22, "bold"),
         bg=BG,
         fg=GOLD
     )
+    title.pack(pady=(25, 5))
 
-    title.pack(pady=15)
+    subtitle = tk.Label(
+        details,
+        text="VAULT PROFILE",
+        font=("Arial", 10, "bold"),
+        bg=BG,
+        fg=TEXT
+    )
+    subtitle.pack(pady=(0, 20))
 
+    # Scrollable profile area
+    content_frame = tk.Frame(details, bg=BG)
+    content_frame.pack(fill="both", expand=True, padx=20)
+
+    canvas = tk.Canvas(
+        content_frame,
+        bg=BG,
+        highlightthickness=0
+    )
+
+    scrollbar = tk.Scrollbar(
+        content_frame,
+        orient="vertical",
+        command=canvas.yview
+    )
+
+    profile_frame = tk.Frame(canvas, bg=BG)
+
+    profile_frame.bind(
+        "<Configure>",
+        lambda event: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window(
+        (0, 0),
+        window=profile_frame,
+        anchor="nw"
+    )
+
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    # Create a panel for every database field
     for field, value in item.items():
 
         if field == "Name":
             continue
 
-        label = tk.Label(
-            details,
-            text=f"{field}: {value}",
-            font=("Arial", 12),
-            anchor="w",
-            bg=BG,
-            fg=TEXT
+        panel = tk.Frame(
+            profile_frame,
+            bg=PANEL,
+            padx=15,
+            pady=12
         )
+        panel.pack(fill="x", pady=6)
 
-        label.pack(anchor="w", padx=20)
+        field_label = tk.Label(
+            panel,
+            text=field.upper(),
+            font=("Arial", 10, "bold"),
+            bg=PANEL,
+            fg=GOLD
+        )
+        field_label.pack(anchor="w")
+
+        value_label = tk.Label(
+            panel,
+            text=str(value),
+            font=("Arial", 12),
+            bg=PANEL,
+            fg=TEXT,
+            justify="left",
+            wraplength=390
+        )
+        value_label.pack(anchor="w", pady=(6, 0))
+
+    # Scroll using mouse wheel / trackpad
+    def scroll_profile(event):
+        if event.delta > 0:
+            canvas.yview_scroll(-1, "units")
+        elif event.delta < 0:
+            canvas.yview_scroll(1, "units")
+
+    details.bind("<MouseWheel>", scroll_profile)
+
+    # Back button stays visible
+    back_button = tk.Button(
+        details,
+        text="Back",
+        width=20,
+        command=details.destroy,
+        **BUTTON_STYLE
+    )
+    back_button.pack(pady=15)
+
 
 def create_database_card(parent, item, subtitle_field=None):
 
