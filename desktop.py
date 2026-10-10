@@ -840,14 +840,15 @@ def open_project_details(project):
     )
     back_button.pack(pady=20)
 
+
 def open_projects():
-    pprojects_window = tk.Toplevel(window)
-    pprojects_window.title("Projects")
-    pprojects_window.geometry("500x600")
-    pprojects_window.configure(bg=BG)
+    projects_window = tk.Toplevel(window)
+    projects_window.title("Projects")
+    projects_window.geometry("500x600")
+    projects_window.configure(bg=BG)
 
     title = tk.Label(
-        pprojects_window,
+        projects_window,
         text="Projects",
         font=("Arial", 20, "bold"),
         bg=BG,
@@ -855,73 +856,104 @@ def open_projects():
     )
     title.pack(pady=20)
 
+    NORMAL_BORDER = "#51445C"
+
     for project in projects.values():
-        project_card=tk.Frame(
-            pprojects_window,
+
+        is_pinned = str(project.get("Pinned", "No")).lower() == "yes"
+
+        # Outer frame acts as the card border
+        card = tk.Frame(
+            projects_window,
+            bg=GOLD if is_pinned else NORMAL_BORDER,
+            padx=2,
+            pady=2,
+            cursor="hand2"
+        )
+        card.pack(fill="x", padx=30, pady=8)
+
+        # Inner dark panel
+        content = tk.Frame(
+            card,
             bg=PANEL,
-            padx=20,
-            pady=15
+            padx=18,
+            pady=15,
+            cursor="hand2"
         )
-        project_card.pack(
-            fill="x",
-            padx=30,
-            pady=10 
-        )
+        content.pack(fill="both", expand=True)
+
         project_name = tk.Label(
-            project_card,
+            content,
             text=project["Name"],
             font=("Arial", 16, "bold"),
             bg=PANEL,
-            fg=GOLD
+            fg=GOLD,
+            cursor="hand2"
         )
         project_name.pack(anchor="w")
-        project_card.bind(
-            "<Button-1>",
-            lambda event, p=project: open_project_details(p)
-)
-
-        project_name.bind(
-            "<Button-1>",
-            lambda event, p=project: open_project_details(p)
-)
 
         project_info = tk.Label(
-            project_card,
+            content,
             text=(
-                f"Genre: {project['Genre']} | "
-                f"status: {project['Status']} | "
+                f"Genre: {project.get('Genre', 'Unknown')}\n"
+                f"Status: {project.get('Status', 'Unknown')}"
             ),
             font=("Arial", 11),
             bg=PANEL,
             fg=TEXT,
-            justify="left"
+            justify="left",
+            cursor="hand2"
         )
-        project_info.pack(
-            anchor="w", 
-            pady=(8,0)
-        )
+        project_info.pack(anchor="w", pady=(8, 0))
 
-        if project["Pinned"] == "Yes":
+        if is_pinned:
             pinned_label = tk.Label(
-                project_card,
-                text="Pinned",
+                content,
+                text="📌 Pinned Project",
                 font=("Arial", 10, "italic"),
                 bg=PANEL,
-                fg=GOLD
+                fg=GOLD,
+                cursor="hand2"
             )
-            pinned_label.pack(
-                anchor="w", 
-                pady=(8,0))  
-             
-        
+            pinned_label.pack(anchor="w", pady=(10, 0))
+
+        # Hover effects
+        def on_enter(event, current_card=card):
+            current_card.configure(bg=GOLD)
+
+        def on_leave(event, current_card=card, pinned=is_pinned):
+            # Check whether the pointer actually left the card,
+            # rather than simply moving between its labels.
+            x, y = current_card.winfo_pointerxy()
+            widget = current_card.winfo_containing(x, y)
+
+            while widget is not None:
+                if widget == current_card:
+                    return
+                widget = widget.master
+
+            current_card.configure(
+                bg=GOLD if pinned else NORMAL_BORDER
+            )
+
+        def open_card(event, selected_project=project):
+            open_project_details(selected_project)
+
+        # Bind every part of the card
+        for widget in [card, content, *content.winfo_children()]:
+            widget.bind("<Enter>", on_enter)
+            widget.bind("<Leave>", on_leave)
+            widget.bind("<Button-1>", open_card)
+
     back_button = tk.Button(
-        pprojects_window,
+        projects_window,
         text="Back",
         width=20,
-        command=pprojects_window.destroy,
+        command=projects_window.destroy,
         **BUTTON_STYLE
     )
     back_button.pack(pady=20)
+
 
 window = tk.Tk()
 window.configure(bg=BG)
