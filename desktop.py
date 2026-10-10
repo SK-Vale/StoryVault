@@ -81,6 +81,78 @@ def show_item(item):
 
         label.pack(anchor="w", padx=20)
 
+def create_database_card(parent, item, subtitle_field=None):
+
+    NORMAL_BORDER = "#51445C"
+    HOVER_BORDER = GOLD
+
+    card = tk.Frame(
+        parent,
+        bg=NORMAL_BORDER,
+        padx=1,
+        pady=1,
+        cursor="hand2"
+    )
+    card.pack(fill="x", padx=30, pady=7)
+
+    content = tk.Frame(
+        card,
+        bg=PANEL,
+        padx=18,
+        pady=14,
+        cursor="hand2"
+    )
+    content.pack(fill="both", expand=True)
+
+    name_label = tk.Label(
+        content,
+        text=item["Name"],
+        font=("Arial", 15, "bold"),
+        bg=PANEL,
+        fg=GOLD,
+        cursor="hand2"
+    )
+    name_label.pack(anchor="w")
+
+    if subtitle_field and subtitle_field in item:
+        subtitle_label = tk.Label(
+            content,
+            text=item[subtitle_field],
+            font=("Arial", 11),
+            bg=PANEL,
+            fg=TEXT,
+            cursor="hand2"
+        )
+        subtitle_label.pack(anchor="w", pady=(6, 0))
+
+    def on_enter(event):
+        card.configure(bg=HOVER_BORDER)
+
+    def on_leave(event):
+        card.configure(bg=NORMAL_BORDER)
+
+    def open_card(event):
+        show_item(item)
+
+    for widget in [card, content, *content.winfo_children()]:
+        widget.bind("<Enter>", on_enter)
+        widget.bind("<Button-1>", open_card)
+
+    # Only remove the highlight when the pointer leaves the entire card.
+    def check_leave(event):
+        x, y = card.winfo_pointerxy()
+        widget_under_pointer = card.winfo_containing(x, y)
+
+        current = widget_under_pointer
+        while current is not None:
+            if current == card:
+                return
+            current = current.master
+
+        on_leave(event)
+
+    for widget in [card, content, *content.winfo_children()]:
+        widget.bind("<Leave>", check_leave)
 
 def open_database_window(title_text, data, subtitle_field=None):
 
@@ -102,21 +174,11 @@ def open_database_window(title_text, data, subtitle_field=None):
 
 
     for key, item in data.items():
-
-        button_text = item["Name"]
-
-        if subtitle_field is not None and subtitle_field in item:
-            button_text = item["Name"] + " - " + item[subtitle_field]
-
-        button = tk.Button(
-            database_window,
-            text=button_text,
-            width=30,
-            command=lambda i=item: show_item(i),
-            **BUTTON_STYLE
-        )
-
-        button.pack(pady=5)
+     create_database_card(
+        database_window,
+        item,
+        subtitle_field
+    )
 
     back_button = tk.Button(
         database_window,
