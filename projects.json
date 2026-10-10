@@ -1,0 +1,20 @@
+{
+    "1": {
+        "Name": "Fantasy Novel",
+        "Genre": "Fantasy",
+        "Status": "Planning",
+        "Pinned": "Yes"
+    },
+    "2": {
+        "Name": "Horror Story",
+        "Genre": "Horror",
+        "Status": "Draft",
+        "Pinned": "No"
+    },
+    "3": {
+        "Name": "Test Novel",
+        "Genre": "Mystery",
+        "Status": "Planning",
+        "Pinned": "Yes"
+    }
+}

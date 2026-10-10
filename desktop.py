@@ -6,7 +6,7 @@ import json
 from creatures import creatures
 from locations import locations
 from timeline import timeline 
-from projects import projects
+
 
 # =========================
 # STORYVAULT THEME
@@ -47,6 +47,12 @@ try:
         sessions = json.load(file)
 except FileNotFoundError:
     sessions = []
+    # Load projects from JSON
+try:
+    with open(get_data_path("projects.json"), "r") as file:
+        projects = json.load(file)
+except FileNotFoundError:
+    projects = {}
 
 
 def show_item(item):
@@ -841,6 +847,113 @@ def open_project_details(project):
     back_button.pack(pady=20)
 
 
+def open_new_project_form(projects_window):
+    form = tk.Toplevel(projects_window)
+    form.title("Create New Project")
+    form.geometry("450x500")
+    form.configure(bg=BG)
+
+    title = tk.Label(
+        form,
+        text="Create New Project",
+        font=("Arial", 20, "bold"),
+        bg=BG,
+        fg=GOLD
+    )
+    title.pack(pady=20)
+
+    def add_field(label_text):
+        label = tk.Label(
+            form,
+            text=label_text,
+            font=("Arial", 11, "bold"),
+            bg=BG,
+            fg=GOLD
+        )
+        label.pack(anchor="w", padx=35, pady=(12, 4))
+
+        entry = tk.Entry(
+            form,
+            font=("Arial", 12),
+            width=35
+        )
+        entry.pack(padx=35)
+        return entry
+
+    name_entry = add_field("Project Name")
+    genre_entry = add_field("Genre")
+    status_entry = add_field("Status")
+
+    pinned_var = tk.BooleanVar(value=False)
+
+    pinned_checkbox = tk.Checkbutton(
+        form,
+        text="Pin this project",
+        variable=pinned_var,
+        bg=BG,
+        fg=TEXT,
+        selectcolor=PANEL,
+        activebackground=BG,
+        activeforeground=GOLD
+    )
+    pinned_checkbox.pack(pady=20)
+
+    def save_project():
+        name = name_entry.get().strip()
+        genre = genre_entry.get().strip()
+        status = status_entry.get().strip()
+
+        if not name or not genre or not status:
+            messagebox.showerror(
+                "Missing Information",
+                "Please fill in all fields.",
+                parent=form
+            )
+            return
+
+        new_id = str(
+            max((int(key) for key in projects.keys()), default=0) + 1
+        )
+
+        projects[new_id] = {
+            "Name": name,
+            "Genre": genre,
+            "Status": status,
+            "Pinned": "Yes" if pinned_var.get() else "No"
+        }
+
+        with open(get_data_path("projects.json"), "w") as file:
+            json.dump(projects, file, indent=4)
+
+        messagebox.showinfo(
+            "Project Created",
+            f"{name} has been added to StoryVault!",
+            parent=form
+        )
+
+        form.destroy()
+        projects_window.destroy()
+        open_projects()
+        refresh_dashboard()
+
+    save_button = tk.Button(
+        form,
+        text="Create Project",
+        width=20,
+        command=save_project,
+        **BUTTON_STYLE
+    )
+    save_button.pack(pady=10)
+
+    cancel_button = tk.Button(
+        form,
+        text="Cancel",
+        width=20,
+        command=form.destroy,
+        **BUTTON_STYLE
+    )
+    cancel_button.pack(pady=5)
+
 def open_projects():
     projects_window = tk.Toplevel(window)
     projects_window.title("Projects")
@@ -855,6 +968,14 @@ def open_projects():
         fg=GOLD
     )
     title.pack(pady=20)
+    new_project_button = tk.Button(
+    projects_window,
+    text="+ New Project",
+    width=20,
+    command=lambda: open_new_project_form(projects_window),
+    **BUTTON_STYLE
+)
+    new_project_button.pack(pady=10)
 
     NORMAL_BORDER = "#51445C"
 
