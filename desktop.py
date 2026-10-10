@@ -24,7 +24,7 @@ BUTTON_ACTIVE = "#5A402B"
 
 BUTTON_STYLE = {
     "bg": BUTTON_BG,
-    "fg": BUTTON_TEXT,
+    "fg": "#000000",
     "activebackground": BUTTON_ACTIVE,
     "activeforeground": TEXT,
     "relief": "flat",
@@ -655,6 +655,45 @@ def open_writing_session():
         **BUTTON_STYLE
     )
     back_button.pack(pady=20)
+def open_project_details(project):
+    details_window = tk.Toplevel(window)
+    details_window.title(project["Name"])
+    details_window.geometry("450x400")
+    details_window.configure(bg=BG)
+
+    title = tk.Label(
+        details_window,
+        text=project["Name"],
+        font=("Arial", 20, "bold"),
+        bg=BG,
+        fg=GOLD
+    )
+    title.pack(pady=25)
+
+    details_text = (
+        f"Genre: {project['Genre']}\n\n"
+        f"Status: {project['Status']}\n\n"
+        f"Pinned: {project['Pinned']}"
+    )
+
+    info = tk.Label(
+        details_window,
+        text=details_text,
+        font=("Arial", 12),
+        bg=BG,
+        fg=TEXT,
+        justify="left"
+    )
+    info.pack(pady=20)
+
+    back_button = tk.Button(
+        details_window,
+        text="Back",
+        width=20,
+        command=details_window.destroy,
+        **BUTTON_STYLE
+    )
+    back_button.pack(pady=20)
 
 def open_projects():
     pprojects_window = tk.Toplevel(window)
@@ -691,6 +730,15 @@ def open_projects():
             fg=GOLD
         )
         project_name.pack(anchor="w")
+        project_card.bind(
+            "<Button-1>",
+            lambda event, p=project: open_project_details(p)
+)
+
+        project_name.bind(
+            "<Button-1>",
+            lambda event, p=project: open_project_details(p)
+)
 
         project_info = tk.Label(
             project_card,
@@ -703,7 +751,7 @@ def open_projects():
             fg=TEXT,
             justify="left"
         )
-        project-info.pack(
+        project_info.pack(
             anchor="w", 
             pady=(8,0)
         )
@@ -720,7 +768,6 @@ def open_projects():
                 anchor="w", 
                 pady=(8,0))  
              
-        project_name.pack()
         
     back_button = tk.Button(
         pprojects_window,
@@ -776,6 +823,7 @@ summary.pack(pady=10)
 button_frame = tk.Frame(
     window,
     bg=BG
+
 )
 button_frame.pack(pady=20)
 
